@@ -1,0 +1,38 @@
+
+
+
+CREATE TABLE IF NOT EXISTS company (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+   	name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS period (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+   	period TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS data_type (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+   	type TEXT NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS dataset(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	company_id INTEGER,
+	period_id INTEGER,
+	data_type_id INTEGER,
+	data1 INTEGER,
+   	data2 INTEGER,
+   	date DATE,
+	FOREIGN KEY(company_id)
+   		REFERENCES company(id)
+   			ON DELETE CASCADE,
+	FOREIGN KEY(period_id)
+   		REFERENCES period(id)
+   			ON DELETE CASCADE,
+	FOREIGN KEY(data_type_id)
+   		REFERENCES data_type(id)
+   			ON DELETE CASCADE
+
+);

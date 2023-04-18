@@ -22,11 +22,13 @@ class XlsxParser:
             company = Company(row[1].value)
             for cell in row:
                 if 2 < cell.col_idx < 11 and cell.col_idx % 2 != 0:
-                    self.__append_data_row(period=self.periods[cell.col_idx],
-                                           company=company,
-                                           data_type=self.data_types[cell.col_idx],
-                                           cell=cell,
-                                           row=row)
+                    self.data_rows.append(DataRow(period=self.periods[cell.col_idx],
+                                                  company=company,
+                                                  data_type=self.data_types[cell.col_idx],
+                                                  data={
+                                                      'data1': cell.value,
+                                                      'data2': row[cell.col_idx].value
+                                                  }))
 
     def __parse_data_types(self, ws):
         for cell in ws[2]:
@@ -39,14 +41,3 @@ class XlsxParser:
             if cell.value and cell.col_idx > 2:
                 for index in range(cell.col_idx, cell.col_idx + 4):
                     self.periods[index] = Period(cell.value)
-
-    def __append_data_row(self, period: Period, company: Company, data_type: DataType, cell: Cell, row: tuple):
-        self.data_rows.append(DataRow(
-            period=period,
-            company=company,
-            data_type=data_type,
-            data={
-                'data1': cell.value,
-                'data2': row[cell.col_idx].value
-            }
-        ))

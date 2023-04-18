@@ -21,7 +21,7 @@ class XlsxParser:
         for row in ws.iter_rows(min_row=4):
             company = Company(row[1].value)
             for cell in row:
-                if 2 < cell.col_idx < 11 and cell.col_idx % 2 != 0:
+                if 2 < cell.col_idx < (len(row) - 1) and cell.col_idx % 2 != 0:
                     self.data_rows.append(DataRow(period=self.periods[cell.col_idx],
                                                   company=company,
                                                   data_type=self.data_types[cell.col_idx],

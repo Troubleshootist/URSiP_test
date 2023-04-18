@@ -2,6 +2,9 @@ from openpyxl import load_workbook
 from openpyxl.cell import Cell
 from models import *
 
+DATA_TYPE_QLIQ = 'Qliq'
+DATA_TYPE_QOIL = 'Qoil'
+
 
 class XlsxParser:
     data_rows = []
@@ -16,23 +19,19 @@ class XlsxParser:
             company = Company(row[1].value)
             for cell in row:
                 if 1 < cell.col_idx < 6:
-                    period = Period('fact')
-                    if cell.col_idx == 3:
-                        data_type = DataType('Qliq')
-                        self.__append_data_row(period, company, data_type, cell, row)
-                    elif cell.col_idx == 5:
-                        data_type = DataType('Qoil')
-                        self.__append_data_row(period, company, data_type, cell, row)
+                    self.__parse_cell(Period('fact'), cell, company, row)
                 else:
-                    period = Period('forecast')
-                    if cell.col_idx == 7:
-                        data_type = DataType('Qliq')
-                        self.__append_data_row(period, company, data_type, cell, row)
-                    elif cell.col_idx == 9:
-                        data_type = DataType('Qoil')
-                        self.__append_data_row(period, company, data_type, cell, row)
+                    self.__parse_cell(Period('forecast'), cell, company, row)
 
-        # data_row = DataRow(period=Period('fact'), )
+    def __parse_cell(self, period: Period, cell: Cell, company: Company, row: tuple):
+        if cell.col_idx == 3:
+            self.__append_data_row(period, company, DataType(DATA_TYPE_QLIQ), cell, row)
+        elif cell.col_idx == 5:
+            self.__append_data_row(period, company, DataType(DATA_TYPE_QOIL), cell, row)
+        elif cell.col_idx == 7:
+            self.__append_data_row(period, company, DataType(DATA_TYPE_QLIQ), cell, row)
+        elif cell.col_idx == 9:
+            self.__append_data_row(period, company, DataType(DATA_TYPE_QOIL), cell, row)
 
     def __append_data_row(self, period: Period, company: Company, data_type: DataType, cell: Cell, row: tuple):
         self.data_rows.append(DataRow(
